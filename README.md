@@ -25,4 +25,4 @@ label.font = font;
 [dialogView addSubview:label];
 [self.view addSubview:dialogView];
 ```
-![Alt text](https://www.dropbox.com/s/zyoqdd3ul7x1wie/photo%20%281%29.PNG "Optional title")
+![Alt text](img/photo.png "Optional title")
