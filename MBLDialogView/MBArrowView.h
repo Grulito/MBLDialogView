@@ -14,4 +14,7 @@
 @property (nonatomic) NSInteger position;
 @property (nonatomic) MBLDirection direction;
 
+
+- (CGPoint)getArrowPosition;
+
 @end

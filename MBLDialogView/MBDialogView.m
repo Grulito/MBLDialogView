@@ -10,6 +10,9 @@
 #import "MBArrowView.h"
 
 @implementation MBDialogView
+{
+	void (^simpleBlock)(void);
+}
 
 - (instancetype)initWithFrame:(CGRect)frame andArrowDirection:(MBLDirection)direction andOffset:(NSInteger)offset;
 {
@@ -29,6 +32,9 @@
 		// frame config
 		[self _defaultDialogWithComponentFrame:frame ColorWithArrowDirection:direction];
 		[self addSubview:_dialog];
+		
+		// initial frame
+		_initialFrame = frame;
     }
     return self;
 }
@@ -111,6 +117,13 @@
 
 - (void)dismiss
 {
+	self.basePoint = [self convertPoint:[_arrow getArrowPosition] toView:nil];
+	CGFloat xValue = self.basePoint.x;
+	CGFloat yValue = self.basePoint.y;
+	
+	NSLog(@"frame : %f %f",self.frame.origin.x,self.frame.origin.y);
+	NSLog(@"frame : %f %f",xValue,yValue);
+	
 	CABasicAnimation *scale = [CABasicAnimation animation];
 	scale.keyPath = @"transform.scale";
 	scale.toValue = @0;
@@ -118,12 +131,12 @@
 	
 	CABasicAnimation *positionX = [CABasicAnimation animation];
 	positionX.keyPath = @"position.x";
-	positionX.toValue = @35;
+	positionX.toValue = @(xValue);
 	positionX.duration = 0.2;
 	
 	CABasicAnimation *positionY = [CABasicAnimation animation];
 	positionY.keyPath = @"position.y";
-	positionY.toValue = @60;
+	positionY.toValue = @(yValue);
 	positionY.duration = 0.2;
 	
 	CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
@@ -140,6 +153,12 @@
 
 - (void)show;
 {
+	CGFloat xValue = self.initialFrame.origin.x;
+	CGFloat yValue = self.initialFrame.origin.y;
+	CGFloat wValue = self.initialFrame.size.width/2;
+	CGFloat hValue = self.initialFrame.size.height/2;
+	
+	
 	CGFloat animationDuration = 0.2;
 	CABasicAnimation *scale = [CABasicAnimation animation];
 	scale.keyPath = @"transform.scale";
@@ -150,12 +169,12 @@
 	
 	CABasicAnimation *positionX = [CABasicAnimation animation];
 	positionX.keyPath = @"position.x";
-	positionX.toValue = @100;
+	positionX.toValue = @(xValue+wValue);
 	positionX.duration = animationDuration;
 	
 	CABasicAnimation *positionY = [CABasicAnimation animation];
 	positionY.keyPath = @"position.y";
-	positionY.toValue = @210;
+	positionY.toValue = @(yValue+hValue);
 	positionY.duration = animationDuration;
 	
 	CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
@@ -172,16 +191,30 @@
 	return;
 }
 
+- (void)triggerBlockAfterAnimation:(id)block
+{
+	simpleBlock = block;
+}
 
 - (void)animationDidStop:(CAAnimation *)theAnimation finished:(BOOL)flag
 {
 	if ([[theAnimation valueForKey:@"animationID"] isEqual:@"dismiss"]) {
-		self.layer.position = CGPointMake(40, 60);
+		self.layer.position = CGPointMake(self.basePoint.x, self.basePoint.y);
 		self.layer.transform = CATransform3DMakeScale(0, 0, 0);
 	}
 	if ([[theAnimation valueForKey:@"animationID"] isEqual:@"show"]) {
-		self.layer.position = CGPointMake(100, 210);
+		CGFloat xValue = self.initialFrame.origin.x;
+		CGFloat yValue = self.initialFrame.origin.y;
+		CGFloat wValue = self.initialFrame.size.width/2;
+		CGFloat hValue = self.initialFrame.size.height/2;
+		self.layer.position = CGPointMake(xValue+wValue, yValue+hValue);
 		self.layer.transform = CATransform3DMakeScale(1, 1, 1);
 	}
+	
+	if (simpleBlock) {
+		simpleBlock();
+		simpleBlock = nil;
+	}
+	
 }
 @end

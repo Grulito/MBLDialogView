@@ -61,4 +61,20 @@
 	CGContextFillPath(ctx);
 }
 
+- (CGPoint)getArrowPosition
+{
+	CGPoint pos;
+	if (self.direction == MBLDirectionNorth) {
+		pos = CGPointMake(self.position, 0);
+	}
+	else if (self.direction == MBLDirectionSouth) {
+		pos = CGPointMake(self.position, self.superview.frame.size.height);
+	}
+	else if (self.direction == MBLDirectionWest) {
+	}
+	else if (self.direction == MBLDirectionEast) {
+	}
+	return pos;
+}
+
 @end

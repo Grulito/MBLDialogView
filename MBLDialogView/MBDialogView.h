@@ -23,11 +23,15 @@ typedef enum {
 @property (nonatomic) NSInteger offset;
 @property (nonatomic) NSInteger sizeArrow;
 @property (nonatomic) BOOL isClose;
+@property (nonatomic) CGRect initialFrame;
+@property (nonatomic) CGPoint basePoint ;
+
 
 - (CGRect)getDialogFrame;
 - (instancetype)initWithFrame:(CGRect)frame andArrowDirection:(MBLDirection)direction andOffset:(NSInteger)offset;
 - (void)dismiss;
 - (void)show;
 
+- (void)triggerBlockAfterAnimation:(id)block;
 @end
 
