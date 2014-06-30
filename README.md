@@ -1,5 +1,11 @@
 iOS custom view for displaying bubble :) 
 
+Features
+--
+
+- Show / dismiss functions
+- Can set a completion block after show/dismiss the windows
+
 Using MBLDialogView
 --
 ```ObjC
